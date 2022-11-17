@@ -1,7 +1,7 @@
 launch:
 
 - arg:
-    name: "count"
+    name: "freq"
     default: "100"
 
 - node:
@@ -10,8 +10,8 @@ launch:
     name: "talker"
     output: "screen"
     param:
-        - name: "count"
-          value: "$(var count)"
+        - name: "freq"
+          value: "$(var freq)"
 
 - node:
     pkg: "cpp_pubsub"

@@ -45,9 +45,13 @@ class MinimalPublisher : public rclcpp::Node { public:
     } else {
       RCLCPP_ERROR_STREAM(this->get_logger(), "DEBUG FAILED");
     }
-   
+    
+    this->declare_parameter("freq",100);
+    f_num = this->get_parameter("freq").get_parameter_value().get<int>();
+
+    this->set_parameter(rclcpp::Parameter("freq", f_num));
     publisher_ = this->create_publisher<std_msgs::msg::String>("talker_bot", 10);
-    timer_ = this->create_wall_timer( 500ms, std::bind(&MinimalPublisher::timer_callback, this));
+    timer_ = this->create_wall_timer(std::chrono::milliseconds(f_num), std::bind(&MinimalPublisher::timer_callback, this));
     // Create a service for modifying str
     std::string string_service_name ="service_topic";
     string_service_ = this->create_service<string_srv::srv::Change>( string_service_name,std::bind(&MinimalPublisher::get_count_callback, this, _1, _2));
@@ -57,42 +61,51 @@ class MinimalPublisher : public rclcpp::Node { public:
  private:
   void timer_callback() {
     if(count_ ==0){
-      message.data = " BEFORE SERVICING : I am talker  ";
-      RCLCPP_INFO_STREAM(this->get_logger(), "Publishing : " << (message.data + std::to_string(count_++)).c_str()); 
+      string_var = " BEFORE SERVICING : I am talker  ";
+      message.data =string_var + std::to_string(count_++);
+     
+      RCLCPP_INFO_STREAM(this->get_logger(), "Publishing : " << message.data.c_str()); 
       }
     else {
 
       if (count_ % 5 ==0) {
         if (count_ % 10 ==0) {
-        RCLCPP_FATAL_STREAM(this->get_logger(), "Publishing: " <<(message.data + std::to_string(count_++)).c_str());  
+        message.data =string_var + std::to_string(count_++);
+        RCLCPP_FATAL_STREAM(this->get_logger(), "Publishing: " <<message.data.c_str());  
         }
         else if (count_ % 10 !=0) {
-        RCLCPP_ERROR_STREAM(this->get_logger(), "Publishing: "<<(message.data + std::to_string(count_++)).c_str());  
+        message.data =string_var + std::to_string(count_++);
+        RCLCPP_ERROR_STREAM(this->get_logger(), "Publishing: "<<message.data.c_str());  
         }
       }  
       else {
         if (count_ % 2 != 0) {
-        RCLCPP_DEBUG_STREAM(this->get_logger(), "Publishing "<< (message.data + std::to_string(count_++)).c_str());
+        message.data =string_var + std::to_string(count_++);
+        RCLCPP_DEBUG_STREAM(this->get_logger(), "Publishing "<< message.data.c_str());
         }
         else
-        {
-          RCLCPP_INFO_STREAM(this->get_logger(), "Publishing: "<< (message.data + std::to_string(count_++)).c_str());
+        { message.data =string_var + std::to_string(count_++);
+          RCLCPP_INFO_STREAM(this->get_logger(), "Publishing: "<< message.data.c_str());
         }
       }
     }
     
     publisher_->publish(message);
+    
+    RCLCPP_INFO_STREAM(this->get_logger(), "Publishing : " <<f_num);
   }
   
   void get_count_callback(const std::shared_ptr<string_srv::srv::Change::Request> request,
                         std::shared_ptr<string_srv::srv::Change::Response> response) {
   request->a = " AFTER SERVICING: I am NEW talker ";
-  message.data = request->a;
+  string_var = request->a;
   RCLCPP_WARN_STREAM(this->get_logger(), "SERVICE CALLED AND BASE STRING CHANGED");
   response->b ="SERVICE DONE";
   }
   
   std_msgs::msg::String message;
+  int f_num;
+  std::string string_var;
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
   rclcpp::Service<string_srv::srv::Change>::SharedPtr string_service_;

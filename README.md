@@ -33,9 +33,11 @@ colcon build --packages-select cpp_pubsub
 ## Implementation
 ```
 . install/setup.bash
-ros2 run cpp_pubsub talker
+#### default timer rate is 100ms
+ros2 launch cpp_publish cpp_publish.yaml freq:=200
 
 In other terminal(Ctrl+Shift+t) - FOR CHANGING BASE STRING
+
 . install/setup.bash
 ros2 service call /service_topic string_srv/srv/Change
 ```

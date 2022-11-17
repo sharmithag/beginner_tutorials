@@ -41,3 +41,5 @@ In other terminal(Ctrl+Shift+t) - FOR CHANGING BASE STRING
 . install/setup.bash
 ros2 service call /service_topic string_srv/srv/Change
 ```
+## RQT_CONSOLE
+![Screenshot from 2022-11-17 18-37-27](https://user-images.githubusercontent.com/90351952/202582825-96f0edec-98cb-44c6-88de-1a7418c8f503.png)

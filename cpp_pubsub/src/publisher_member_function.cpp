@@ -1,0 +1,112 @@
+// Copyright 2016 Open Source Robotics Foundation, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/**
+ * @file publisher_member_function.cpp
+ * @author Sharmitha Ganesan (sganesa3@umd.edu)
+ * @brief 
+ * @version 0.1
+ * @date 2022-11-16
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+#include <chrono>  // NOLINT
+#include <functional>
+#include <memory>
+#include <string>
+#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
+#include "string_srv/srv/change.hpp"
+
+using namespace std::placeholders;  // NOLINT
+using namespace std::chrono_literals;  // NOLINT
+
+/* This example creates a subclass of Node and uses std::bind() to register a
+ * member function as a callback from the timer. */
+
+class MinimalPublisher : public rclcpp::Node { public:
+  MinimalPublisher() : Node("minimal_publisher"), count_(0) {
+    if (rcutils_logging_set_logger_level(
+            this->get_logger().get_name(),
+            RCUTILS_LOG_SEVERITY::RCUTILS_LOG_SEVERITY_DEBUG) ==
+        RCUTILS_RET_OK) {
+      RCLCPP_INFO_STREAM(this->get_logger(), "DEBUG SET");
+    } else {
+      RCLCPP_ERROR_STREAM(this->get_logger(), "DEBUG FAILED");
+    }
+   
+    publisher_ = this->create_publisher<std_msgs::msg::String>("talker_bot", 10);
+    timer_ = this->create_wall_timer( 500ms, std::bind(&MinimalPublisher::timer_callback, this));
+    // Create a service for modifying str
+    std::string string_service_name ="service_topic";
+    string_service_ = this->create_service<string_srv::srv::Change>( string_service_name,std::bind(&MinimalPublisher::get_count_callback, this, _1, _2));
+  
+  }
+
+ private:
+  void timer_callback() {
+    if(count_ ==0){
+      message.data = " BEFORE SERVICING : I am talker  ";
+      RCLCPP_INFO_STREAM(this->get_logger(), "Publishing : " << (message.data + std::to_string(count_++)).c_str()); 
+      }
+    else {
+
+      if (count_ % 5 ==0) {
+        if (count_ % 10 ==0) {
+        RCLCPP_FATAL_STREAM(this->get_logger(), "Publishing: " <<(message.data + std::to_string(count_++)).c_str());  
+        }
+        else if (count_ % 10 !=0) {
+        RCLCPP_ERROR_STREAM(this->get_logger(), "Publishing: "<<(message.data + std::to_string(count_++)).c_str());  
+        }
+      }  
+      else {
+        if (count_ % 2 != 0) {
+        RCLCPP_DEBUG_STREAM(this->get_logger(), "Publishing "<< (message.data + std::to_string(count_++)).c_str());
+        }
+        else
+        {
+          RCLCPP_INFO_STREAM(this->get_logger(), "Publishing: "<< (message.data + std::to_string(count_++)).c_str());
+        }
+      }
+    }
+    
+    publisher_->publish(message);
+  }
+  
+  void get_count_callback(const std::shared_ptr<string_srv::srv::Change::Request> request,
+                        std::shared_ptr<string_srv::srv::Change::Response> response) {
+  request->a = " AFTER SERVICING: I am NEW talker ";
+  message.data = request->a;
+  RCLCPP_WARN_STREAM(this->get_logger(), "SERVICE CALLED AND BASE STRING CHANGED");
+  response->b ="SERVICE DONE";
+  }
+  
+  std_msgs::msg::String message;
+  rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+  rclcpp::Service<string_srv::srv::Change>::SharedPtr string_service_;
+  size_t count_;
+};
+
+int main(int argc, char * argv[]) {
+  rclcpp::init(argc, argv);
+  
+  RCLCPP_INFO_STREAM(
+      rclcpp::get_logger("rclcpp"),
+      "\n MULTIPLES OF 5 set as ERROR\n MULTIPLES OF 5 AND 10 set as FATAL \n EVEN NUMBERS set as INFO \n ODD NUMBERS set as DEBUG \n SERVICE CALLS enables WARN");
+
+  rclcpp::spin(std::make_shared<MinimalPublisher>());
+  rclcpp::shutdown();
+  return 0;
+}

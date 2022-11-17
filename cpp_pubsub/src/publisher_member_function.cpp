@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 /**
  * @file publisher_member_function.cpp
  * @author Sharmitha Ganesan (sganesa3@umd.edu)
@@ -131,12 +132,10 @@ class MinimalPublisher : public rclcpp::Node {
 
 int main(int argc, char *argv[]) {
   rclcpp::init(argc, argv);
-
   RCLCPP_INFO_STREAM(rclcpp::get_logger("rclcpp"),
                      "\n MULTIPLES OF 5 set as ERROR\n MULTIPLES OF 5 AND 10 "
                      "set as FATAL \n EVEN NUMBERS set as INFO \n ODD NUMBERS "
                      "set as DEBUG \n SERVICE CALLS enables WARN");
-
   rclcpp::spin(std::make_shared<MinimalPublisher>());
   rclcpp::shutdown();
   return 0;

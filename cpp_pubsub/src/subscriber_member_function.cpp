@@ -22,11 +22,9 @@
  *
  */
 #include <memory>
-
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 using std::placeholders::_1;
-
 class MinimalSubscriber : public rclcpp::Node {
  public:
   MinimalSubscriber() : Node("minimal_subscriber") {
@@ -41,7 +39,6 @@ class MinimalSubscriber : public rclcpp::Node {
   }
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
 };
-
 int main(int argc, char *argv[]) {
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<MinimalSubscriber>());

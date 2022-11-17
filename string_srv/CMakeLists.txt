@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(cpp_pubsub)
+project(string_srv)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -17,28 +17,16 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
-find_package(string_srv REQUIRED)
 
-add_executable(talker src/publisher_member_function.cpp)
-ament_target_dependencies(talker rclcpp std_msgs string_srv)
-add_executable(listener src/subscriber_member_function.cpp)
-ament_target_dependencies(listener rclcpp std_msgs)
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/String.msg"
+  "srv/Change.srv"
+)
 
-
-install(TARGETS
-  talker
-  listener
-  DESTINATION lib/${PROJECT_NAME})
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
-
-install(
-  DIRECTORY launch
-  DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

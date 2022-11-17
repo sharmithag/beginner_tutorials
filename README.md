@@ -15,12 +15,16 @@ source /opt/ros/foxy/setup.bash
 
 Clone the repository in src of ros workspace
 ```
-cd <YOUR ROS2 WS FOLDER>/src
+
 git clone https://github.com/sharmithag/beginner_tutorials.git
+cd beginner_tutorials/
+mv cpp_pubsub/ ~/<YOUR ROS2 WS FOLDER>/src
+cd ~/<YOUR ROS2 WS FOLDER>/src
+
 ```
 Use colcon to build the package.
 ```
-cd <YOUR ROS2 WS FOLDER>
+cd ..
 colcon build --packages-select cpp_pubsub
 
 ```

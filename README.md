@@ -1,5 +1,6 @@
 # beginner_tutorials
-## OVERVIEW
+
+## Overview
 Basic publisher and subcriber implementation in ROS2 Foxy
 
 ## Requirements
@@ -20,7 +21,7 @@ git clone https://github.com/sharmithag/beginner_tutorials.git
 Use colcon to build the package.
 ```
 cd <YOUR ROS2 WS FOLDER>
-colcon build --packages-select pub_sub
+colcon build --packages-select cpp_pubsub
 
 ```
 ## Implementation

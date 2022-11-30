@@ -37,7 +37,7 @@ colcon build --packages-select cpp_pubsub
 . install/setup.bash
 
 #### default timer rate is 100ms
-ros2 launch cpp_publish cpp_publish.yaml freq:=200
+ros2 launch cpp_pubsub cpp_pubsub.yaml freq:=200
 
 In other terminal(Ctrl+Shift+t) - FOR CHANGING BASE STRING
 

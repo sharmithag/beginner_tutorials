@@ -43,6 +43,11 @@ In other terminal(Ctrl+Shift+t) - FOR CHANGING BASE STRING
 
 . install/setup.bash
 ros2 service call /service_topic string_srv/srv/Change
+
+In other terminal(Ctrl+Shift+t) - FOR CHECKING tf topic
+. install/setup.bash
+ros2 run tf2_ros tf2_echo world talk
+
 ```
 ## RQT_CONSOLE
 ![Screenshot from 2022-11-17 18-39-15](https://user-images.githubusercontent.com/90351952/202583023-bf5046e9-4380-4a2a-9ac2-54dd59fda0d3.png)

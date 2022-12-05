@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="cpp_pubsub" type="talker" name="talker" />
+  <test test-name="test" pkg="cpp_pubsub" type="test" />
+</launch>

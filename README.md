@@ -47,6 +47,9 @@ ros2 service call /service_topic string_srv/srv/Change
 In other terminal(Ctrl+Shift+t) - FOR CHECKING tf topic
 . install/setup.bash
 ros2 run tf2_ros tf2_echo world talk
+In other terminal(Ctrl+Shift+t) - FOR CHECKING tf topic frames
+. install/setup.bash
+ros2 run tf2_tools view_frames.py
 
 ```
 ## RQT_CONSOLE

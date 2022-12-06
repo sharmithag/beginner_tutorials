@@ -132,3 +132,4 @@ void MinimalPublisher::set_frame(geometry_msgs::msg::TransformStamped t) {
 }
 geometry_msgs::msg::TransformStamped MinimalPublisher::get_frame() {
   return child;
+}

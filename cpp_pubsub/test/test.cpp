@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
 *****************************************************************************
  * MIT License
@@ -21,16 +20,11 @@ SOFTWARE.
 * *******************************************************************************
 */
 
-
-=======
-#include "cpp_pubsub/publisher_member_function.h"
->>>>>>> main
 #include <gtest/gtest.h>
 #include <stdlib.h>
 #include <tf2/exceptions.h>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
-<<<<<<< HEAD
 #include <memory>
 #include <cstdint>
 #include "cpp_pubsub/publisher_member_function.hpp"
@@ -40,14 +34,6 @@ using namespace std::chrono_literals; // NOLINT
  * @brief Class testpub for testing tf frame translation and rotation
  * 
  */
-=======
-#include <cstdint>
-#include <memory>
-#include <thread>
-
-using namespace std::chrono_literals;
-
->>>>>>> main
 class TestPub : public ::testing::Test {
  public:
   TestPub() {}
@@ -63,10 +49,6 @@ class TestPub : public ::testing::Test {
 
   void TearDown() override { rclcpp::shutdown(); }
 
-<<<<<<< HEAD
-=======
- protected:
->>>>>>> main
   std::shared_ptr<MinimalPublisher> minimal_pub_;
   std::shared_ptr<rclcpp::Clock> clock_;
   std::shared_ptr<tf2_ros::TransformListener> tf_listener_{nullptr};
@@ -74,11 +56,8 @@ class TestPub : public ::testing::Test {
   std::unique_ptr<std::thread> pub_thread_;
 };
 
-<<<<<<< HEAD
 TEST_F(TestPub, TestTF) {
-=======
-TEST(TestPub, TestTF) {
->>>>>>> main
+
   auto start = clock_->now();
   double duration_sec = 0;
   while (duration_sec < 3) {
@@ -91,17 +70,12 @@ TEST(TestPub, TestTF) {
   // lookupTransform
   try {
     t = tf_buffer_->lookupTransform("world", "talk", tf2::TimePointZero);
-<<<<<<< HEAD
   } catch (const tf2::TransformException &ex) {
-=======
-  } catch (const tf2::TransformException& ex) {
->>>>>>> main
     RCLCPP_INFO_STREAM(rclcpp::get_logger("rclcpp"),
                        "Could not find transform from world to talk");
     FAIL();
   }
 
-<<<<<<< HEAD
   EXPECT_FLOAT_EQ(t.transform.translation.x,
                   minimal_pub_->get_frame().transform.translation.x);
   EXPECT_FLOAT_EQ(t.transform.translation.y,
@@ -116,18 +90,3 @@ TEST(TestPub, TestTF) {
                   minimal_pub_->get_frame().transform.rotation.z);
   EXPECT_FLOAT_EQ(t.transform.rotation.w,
                   minimal_pub_->get_frame().transform.rotation.w);
-=======
-  EXPECT_FLOAT_EQ(t.transform.translation.x, minimal_pub_->get_frame().transform.translation.x);
-  EXPECT_FLOAT_EQ(t.transform.translation.y, minimal_pub_->get_frame().transform.translation.x);
-  EXPECT_FLOAT_EQ(t.transform.translation.z, minimal_pub_->get_frame().transform.translation.x);
-  EXPECT_FLOAT_EQ(t.transform.rotation.x, minimal_pub_->get_frame().transform.rotation.x);
-  EXPECT_FLOAT_EQ(t.transform.rotation.y, minimal_pub_->get_frame().transform.rotation.y);
-  EXPECT_FLOAT_EQ(t.transform.rotation.z, minimal_pub_->get_frame().transform.rotation.z);
-  EXPECT_FLOAT_EQ(t.transform.rotation.w, minimal_pub_->get_frame().transform.rotation.w);
-}
-int main(int argc, char** argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  int result = RUN_ALL_TESTS();
-  return result;
->>>>>>> main
-}

@@ -36,19 +36,10 @@ colcon build --packages-select cpp_pubsub
 #### default timer rate is 100ms
 ```
 . install/setup.bash
-<<<<<<< HEAD
 ros2 launch cpp_pubsub cpp_pubsub.yaml freq:=200
 ```
 #### In other terminal(Ctrl+Shift+t) - FOR CHANGING BASE STRING
 ```
-=======
-
-#### default timer rate is 100ms
-ros2 launch cpp_pubsub cpp_pubsub.yaml freq:=200
-
-In other terminal(Ctrl+Shift+t) - FOR CHANGING BASE STRING
-
->>>>>>> main
 . install/setup.bash
 ros2 service call /service_topic string_srv/srv/Change
 ```
@@ -61,6 +52,11 @@ ros2 run tf2_ros tf2_echo world talk
 ```
 . install/setup.bash
 ros2 run tf2_tools view_frames.py
+```
+#### In other terminal(Ctrl+Shift+t) - FOR Testing
+```
+. install/setup.bash
+ros2 run cpp_pubsub test_cpp
 
 ```
 #### Launch file for rosbag record

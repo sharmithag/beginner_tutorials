@@ -54,6 +54,12 @@ ros2 run tf2_ros tf2_echo world talk
 ros2 run tf2_tools view_frames.py
 
 ```
+#### In other terminal(Ctrl+Shift+t) - FOR Testing
+```
+. install/setup.bash
+ros2 run cpp_pubsub test_cpp
+
+```
 #### Launch file for rosbag record
 ```
 . install/setup.bash

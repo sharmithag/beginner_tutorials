@@ -28,7 +28,6 @@ SOFTWARE.
  * @copyright Copyright (c) 2022
  *
  */
-
 #include "cpp_pubsub/publisher_member_function.hpp"
 using namespace std::placeholders;    // NOLINT
 using namespace std::chrono_literals; // NOLINT
@@ -60,19 +59,15 @@ MinimalPublisher::MinimalPublisher() : Node("minimal_publisher"), count_(0) {
       std::bind(&MinimalPublisher::get_count_callback, this, _1, _2));
 }
 
-/**
- * @brief timer callback to publish msg and logging levels
- *
- */
 void MinimalPublisher::timer_callback() {
   if (count_ == 0) {
     string_var = " BEFORE SERVICING : I am talker  ";
     message.data = string_var + std::to_string(count_++);
 
     RCLCPP_INFO_STREAM(this->get_logger(),
-                       "Publishing : " << message.data.c_str());
+                        "Publishing : " << message.data.c_str());
   } else {
-    if (count_ % 5 == 0) {
+  if (count_ % 5 == 0) {
       if (count_ % 10 == 0) {
         message.data = string_var + std::to_string(count_++);
         RCLCPP_FATAL_STREAM(this->get_logger(),
@@ -97,6 +92,7 @@ void MinimalPublisher::timer_callback() {
   publisher_->publish(message);
 }
 /**
+
  * @brief SERVICE CALLBACK
  *
  * @param request
@@ -136,4 +132,3 @@ void MinimalPublisher::set_frame(geometry_msgs::msg::TransformStamped t) {
 }
 geometry_msgs::msg::TransformStamped MinimalPublisher::get_frame() {
   return child;
-}

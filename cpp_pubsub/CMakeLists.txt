@@ -27,10 +27,10 @@ add_library(talker_lib
 
 ament_target_dependencies(talker_lib rclcpp std_msgs geometry_msgs tf2 tf2_ros std_msgs string_srv)
 
-
 add_executable(talker src/publisher_member_function.cpp src/pub_main.cpp)
 target_link_libraries(talker
 talker_lib)
+
 add_executable(listener src/subscriber_member_function.cpp)
 ament_target_dependencies(listener rclcpp std_msgs)
 

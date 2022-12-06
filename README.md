@@ -52,7 +52,6 @@ ros2 run tf2_ros tf2_echo world talk
 ```
 . install/setup.bash
 ros2 run tf2_tools view_frames.py
-
 ```
 #### In other terminal(Ctrl+Shift+t) - FOR Testing
 ```

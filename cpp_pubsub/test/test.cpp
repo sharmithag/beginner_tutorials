@@ -20,7 +20,6 @@ SOFTWARE.
 * *******************************************************************************
 */
 
-
 #include <gtest/gtest.h>
 #include <stdlib.h>
 #include <tf2/exceptions.h>
@@ -58,6 +57,7 @@ class TestPub : public ::testing::Test {
 };
 
 TEST_F(TestPub, TestTF) {
+
   auto start = clock_->now();
   double duration_sec = 0;
   while (duration_sec < 3) {
@@ -90,4 +90,3 @@ TEST_F(TestPub, TestTF) {
                   minimal_pub_->get_frame().transform.rotation.z);
   EXPECT_FLOAT_EQ(t.transform.rotation.w,
                   minimal_pub_->get_frame().transform.rotation.w);
-}

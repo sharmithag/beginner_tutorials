@@ -90,3 +90,4 @@ TEST_F(TestPub, TestTF) {
                   minimal_pub_->get_frame().transform.rotation.z);
   EXPECT_FLOAT_EQ(t.transform.rotation.w,
                   minimal_pub_->get_frame().transform.rotation.w);
+}

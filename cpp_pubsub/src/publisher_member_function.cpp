@@ -23,143 +23,117 @@
  *
  */
 
-#include "geometry_msgs/msg/transform_stamped.hpp"
-#include "rclcpp/rclcpp.hpp"
-#include "tf2/LinearMath/Quaternion.h"
-#include "tf2_ros/transform_broadcaster.h"
-#include "std_msgs/msg/string.hpp"
-#include "string_srv/srv/change.hpp"
-#include <chrono> // NOLINT
-#include <memory> // NOLINT
-#include <string> // NOLINT
-#include <iostream>
-
+#include "cpp_pubsub/publisher_member_function.h"
 using namespace std::placeholders;    // NOLINT
 using namespace std::chrono_literals; // NOLINT
 
-/**
- * @brief class MinimalPublisher
- *
- */
-class MinimalPublisher : public rclcpp::Node {
- public:
-  /**
-   * @brief Construct a new Minimal Publisher object
-   *
-   */
-  MinimalPublisher() : Node("minimal_publisher"), count_(0) {
-    if (rcutils_logging_set_logger_level(
-            this->get_logger().get_name(),
-            RCUTILS_LOG_SEVERITY::RCUTILS_LOG_SEVERITY_DEBUG) ==
-        RCUTILS_RET_OK) {
-      RCLCPP_INFO_STREAM(this->get_logger(), "DEBUG SET");
-    } else {
-      RCLCPP_ERROR_STREAM(this->get_logger(), "DEBUG FAILED");
-    }
 
-    this->declare_parameter("freq", 100);
-    f_num = this->get_parameter("freq").get_parameter_value().get<int>();
-    this->set_parameter(rclcpp::Parameter("freq", f_num));
-    publisher_ =
-        this->create_publisher<std_msgs::msg::String>("talker_bot", 10);
-    timer_ = this->create_wall_timer(
-        std::chrono::milliseconds(f_num),
-        std::bind(&MinimalPublisher::timer_callback, this));
-    // broadcast talk
-    tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
-    tf_timer_ = this->create_wall_timer(300ms, std::bind(&MinimalPublisher::make_transforms, this));
-    // Create a service for modifying str
-    std::string string_service_name = "service_topic";
-    string_service_ = this->create_service<string_srv::srv::Change>(
-        string_service_name,
-        std::bind(&MinimalPublisher::get_count_callback, this, _1, _2));
+MinimalPublisher::MinimalPublisher() : Node("minimal_publisher"), count_(0) {
+  if (rcutils_logging_set_logger_level(
+          this->get_logger().get_name(),
+          RCUTILS_LOG_SEVERITY::RCUTILS_LOG_SEVERITY_DEBUG) ==
+      RCUTILS_RET_OK) {
+    RCLCPP_INFO_STREAM(this->get_logger(), "DEBUG SET");
+  } else {
+    RCLCPP_ERROR_STREAM(this->get_logger(), "DEBUG FAILED");
   }
 
- private:
-  /**
-   * @brief timer callback to publish msg and logging levels
-   *
-   */
-  void timer_callback() {
-    if (count_ == 0) {
-      string_var = " BEFORE SERVICING : I am talker  ";
-      message.data = string_var + std::to_string(count_++);
+  this->declare_parameter("freq", 100);
+  f_num = this->get_parameter("freq").get_parameter_value().get<int>();
+  this->set_parameter(rclcpp::Parameter("freq", f_num));
+  publisher_ =
+      this->create_publisher<std_msgs::msg::String>("talker_bot", 10);
+  timer_ = this->create_wall_timer(
+      std::chrono::milliseconds(f_num),
+      std::bind(&MinimalPublisher::timer_callback, this));
+  // broadcast talk
+  tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
+  tf_timer_ = this->create_wall_timer(300ms, std::bind(&MinimalPublisher::make_transforms, this));
+  // Create a service for modifying str
+  std::string string_service_name = "service_topic";
+  string_service_ = this->create_service<string_srv::srv::Change>(
+      string_service_name,
+      std::bind(&MinimalPublisher::get_count_callback, this, _1, _2));
+}
 
-      RCLCPP_INFO_STREAM(this->get_logger(),
-                         "Publishing : " << message.data.c_str());
+/**
+  * @brief timer callback to publish msg and logging levels
+  *
+  */
+void MinimalPublisher::timer_callback() {
+  if (count_ == 0) {
+    string_var = " BEFORE SERVICING : I am talker  ";
+    message.data = string_var + std::to_string(count_++);
+
+    RCLCPP_INFO_STREAM(this->get_logger(),
+                        "Publishing : " << message.data.c_str());
+  } else {
+  if (count_ % 5 == 0) {
+      if (count_ % 10 == 0) {
+        message.data = string_var + std::to_string(count_++);
+        RCLCPP_FATAL_STREAM(this->get_logger(),
+                            "Publishing: " << message.data.c_str());
+      } else if (count_ % 10 != 0) {
+        message.data = string_var + std::to_string(count_++);
+        RCLCPP_ERROR_STREAM(this->get_logger(),
+                            "Publishing: " << message.data.c_str());
+      }
     } else {
-    if (count_ % 5 == 0) {
-        if (count_ % 10 == 0) {
-          message.data = string_var + std::to_string(count_++);
-          RCLCPP_FATAL_STREAM(this->get_logger(),
-                              "Publishing: " << message.data.c_str());
-        } else if (count_ % 10 != 0) {
-          message.data = string_var + std::to_string(count_++);
-          RCLCPP_ERROR_STREAM(this->get_logger(),
-                              "Publishing: " << message.data.c_str());
-        }
+      if (count_ % 2 != 0) {
+        message.data = string_var + std::to_string(count_++);
+        RCLCPP_DEBUG_STREAM(this->get_logger(),
+                            "Publishing " << message.data.c_str());
       } else {
-        if (count_ % 2 != 0) {
-          message.data = string_var + std::to_string(count_++);
-          RCLCPP_DEBUG_STREAM(this->get_logger(),
-                              "Publishing " << message.data.c_str());
-        } else {
-          message.data = string_var + std::to_string(count_++);
-          RCLCPP_INFO_STREAM(this->get_logger(),
-                             "Publishing: " << message.data.c_str());
-        }
+        message.data = string_var + std::to_string(count_++);
+        RCLCPP_INFO_STREAM(this->get_logger(),
+                            "Publishing: " << message.data.c_str());
       }
     }
-    publisher_->publish(message);
   }
-  /**
-   * @brief SERVICE CALLBACK
-   *
-   * @param request
-   * @param response
-   */
-  void get_count_callback(
-      const std::shared_ptr<string_srv::srv::Change::Request> request,
-      std::shared_ptr<string_srv::srv::Change::Response> response) {
-    request->a = " AFTER SERVICING: I am NEW talker ";
-    string_var = request->a;
-    RCLCPP_WARN_STREAM(this->get_logger(),
-                       "SERVICE CALLED AND BASE STRING CHANGED");
-    response->b = "SERVICE DONE";
-  }
-  void make_transforms() {
-    geometry_msgs::msg::TransformStamped t;
+  publisher_->publish(message);
+}
+/**
+  * @brief SERVICE CALLBACK
+  *
+  * @param request
+  * @param response
+  */
+void MinimalPublisher::get_count_callback(
+    const std::shared_ptr<string_srv::srv::Change::Request> request,
+    std::shared_ptr<string_srv::srv::Change::Response> response) {
+  request->a = " AFTER SERVICING: I am NEW talker ";
+  string_var = request->a;
+  RCLCPP_WARN_STREAM(this->get_logger(),
+                      "SERVICE CALLED AND BASE STRING CHANGED");
+  response->b = "SERVICE DONE";
+}
 
-    t.header.stamp = this->get_clock()->now();
-    t.header.frame_id = "world";
-    t.child_frame_id = "talk";
+void MinimalPublisher::make_transforms() {
+  geometry_msgs::msg::TransformStamped t;
 
-    t.transform.translation.x = 5;
-    t.transform.translation.y = 5;
-    t.transform.translation.z = 5;
-    tf2::Quaternion q;
-    q.setRPY(0.7,0.5,1);
-    t.transform.rotation.x = q.x();
-    t.transform.rotation.y = q.y();
-    t.transform.rotation.z = q.z();
-    t.transform.rotation.w = q.w();
-    
-    tf_broadcaster_->sendTransform(t);
-  }
-  std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+  t.header.stamp = this->get_clock()->now();
+  t.header.frame_id = "world";
+  t.child_frame_id = "talk";
+  t.transform.translation.x = 5;
+  t.transform.translation.y = 5;
+  t.transform.translation.z = 5;
+  tf2::Quaternion q;
+  q.setRPY(0.7, 0.5, 1);
+  t.transform.rotation.x = q.x();
+  t.transform.rotation.y = q.y();
+  t.transform.rotation.z = q.z();
+  t.transform.rotation.w = q.w();
+  MinimalPublisher::set_frame(t);
 
-  std_msgs::msg::String message;
-  int f_num;
-  std::string string_var;
-  rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::TimerBase::SharedPtr tf_timer_;
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
-  rclcpp::Service<string_srv::srv::Change>::SharedPtr string_service_;
-  size_t count_;
-};
-
+  tf_broadcaster_->sendTransform(t);
+}
+void MinimalPublisher::set_frame(geometry_msgs::msg::TransformStamped t) {
+child = t;
+}
+geometry_msgs::msg::TransformStamped  MinimalPublisher::get_frame() {
+  return child;
+}
 int main(int argc, char *argv[]) {
-
   // if (argc != 8) {
   //   RCLCPP_INFO(
   //     rclcpp::get_logger("rclcpp"), "Invalid number of parameters\nusage: "
@@ -167,15 +141,12 @@ int main(int argc, char *argv[]) {
   //     "child_frame_name x y z roll pitch yaw");
   //   return 1;
   // }
-  
   // // As the parent frame of the transform is `world`, it is
   // // necessary to check that the frame name passed is different
   // if (strcmp(argv[1], "world") == 0) {
   //   RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Your static turtle name cannot be 'world'");
   //   return 2;
   // }
-
-  
   rclcpp::init(argc, argv);
   RCLCPP_INFO_STREAM(rclcpp::get_logger("rclcpp"),
                      "\n MULTIPLES OF 5 set as ERROR\n MULTIPLES OF 5 AND 10 "

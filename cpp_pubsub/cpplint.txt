@@ -1,0 +1,6 @@
+Done processing ./include/cpp_pubsub/publisher_member_function.h
+Done processing ./src/pub_main.cpp
+Done processing ./src/publisher_member_function.cpp
+Done processing ./src/subscriber_member_function.cpp
+Done processing ./test/main.cpp
+Done processing ./test/test.cpp

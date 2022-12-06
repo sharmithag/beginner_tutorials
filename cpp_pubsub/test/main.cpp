@@ -18,38 +18,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 * *******************************************************************************
 */
+
 /**
- * @file subscriber_member_function.cpp
- * @author Sharmitha Ganesan (sganesa3@umd.edu)
- * @brief basic subscriber
- * @version 0.1
- * @date 2022-11-16
- *
  * @copyright Copyright (c) 2022
+ * @file main.cpp
+ * @author Sharmitha Ganesan
+ * @version 0.1
+ *
+ * @brief Testing Talker
  *
  */
-#include <memory>
-#include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
 
-using std::placeholders::_1;
-class MinimalSubscriber : public rclcpp::Node {
- public:
-  MinimalSubscriber() : Node("minimal_subscriber") {
-    subscription_ = this->create_subscription<std_msgs::msg::String>(
-        "talker_bot", 10,
-        std::bind(&MinimalSubscriber::topic_callback, this, _1));
-  }
+#include <rclcpp/rclcpp.hpp>
 
- private:
-  void topic_callback(const std_msgs::msg::String::SharedPtr msg) const {
-    RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg->data.c_str());
-  }
-  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
-};
-int main(int argc, char *argv[]) {
-  rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<MinimalSubscriber>());
-  rclcpp::shutdown();
-  return 0;
+#include "gtest/gtest.h"
+
+int main(int argc, char **argv) {
+  ::testing::InitGoogleTest(&argc, argv);
+  int result = RUN_ALL_TESTS();
+  return result;
 }

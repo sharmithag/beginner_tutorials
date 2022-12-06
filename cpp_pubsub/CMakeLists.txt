@@ -27,22 +27,10 @@ add_library(talker_lib
 
 ament_target_dependencies(talker_lib rclcpp std_msgs geometry_msgs tf2 tf2_ros std_msgs string_srv)
 
-# rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} "rosidl_typesupport_cpp")
-# target_link_libraries(talker_lib "${cpp_typesupport_target}")
 
-add_executable(talker src/publisher_member_function.cpp)
+add_executable(talker src/publisher_member_function.cpp src/pub_main.cpp)
 target_link_libraries(talker
-  talker_lib
-)
-
-add_executable(talker src/publisher_member_function.cpp)
-ament_target_dependencies(talker
-geometry_msgs
-rclcpp
-tf2
-tf2_ros 
-std_msgs 
-string_srv)
+talker_lib)
 add_executable(listener src/subscriber_member_function.cpp)
 ament_target_dependencies(listener rclcpp std_msgs)
 
@@ -70,11 +58,13 @@ install(
   DIRECTORY launch
   DESTINATION share/${PROJECT_NAME})
   
-ament_add_gtest(test_cpp test/test.cpp)
+ament_add_gtest(test_cpp test/test.cpp test/main.cpp )
 target_link_libraries(test_cpp talker_lib)
 ament_target_dependencies(test_cpp geometry_msgs
 tf2
-tf2_ros)
+tf2_ros
+std_msgs 
+string_srv)
 install(
     TARGETS test_cpp
     DESTINATION lib/${PROJECT_NAME}

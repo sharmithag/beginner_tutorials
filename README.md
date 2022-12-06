@@ -54,6 +54,10 @@ ros2 run tf2_ros tf2_echo world talk
 ros2 run tf2_tools view_frames.py
 
 ```
+#### Launch file for rosbag record
+. install/setup.bash
+ros2 launch cpp_pubsub cpp_pubsub.py
+
 ## RQT_CONSOLE
 ![Screenshot from 2022-11-17 18-39-15](https://user-images.githubusercontent.com/90351952/202583023-bf5046e9-4380-4a2a-9ac2-54dd59fda0d3.png)
 

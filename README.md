@@ -58,6 +58,9 @@ ros2 run tf2_tools view_frames.py
 . install/setup.bash
 ros2 run cpp_pubsub test_cpp
 
+# ALTERNATIVE
+colcon test --event-handlers console_direct+ --packages-select cpp_pubsub
+
 ```
 #### Launch file for rosbag record
 ```
